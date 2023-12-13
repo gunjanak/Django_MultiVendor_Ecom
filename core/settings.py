@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    
     'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    
 ]
 
 MIDDLEWARE = [
@@ -125,3 +128,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+
+LOGIN_REDIRECT_URL = "profile"
+LOGIN_URL = "login"
+LOGOUT_URL = "logout"
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
