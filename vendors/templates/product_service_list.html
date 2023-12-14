@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+    <h2>Product and Service</h2>
+
+    {% if user.is_authenticated %}
+    <h3>
+        <a href="{% url 'user_product_service_list' %}">
+            Your Product and Services
+        </a>
+    </h3>
+    <h3>Create</h3>
+    <a href="{% url 'create_product' %}">Create a Product</a>
+    <br>
+    <a href="{% url 'create_service' %}">Create a Service</a>
+    {% endif %}
+
+
+    <h3>Products</h3>
+    <ul>
+        {% for product in product_service_list %}
+            <li>
+                <a href="{% url 'product_detail' pk=product.pk %}">
+                    {{ product.item_name}}
+                </a>
+                
+                Price: {{ product.price }}
+            </li>
+
+        {% endfor %}
+    </ul>
+
+    <h3>Services</h3>
+    <ul>
+        {% for service in service_list %}
+            <li>
+                <a href="{% url 'service_detail' pk=service.pk %}">
+                    {{ service.item_name }}
+                </a>
+                
+            </li>
+
+        {% endfor %}
+    </ul>
+{% endblock %}

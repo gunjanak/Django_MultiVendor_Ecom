@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h2>{{ product.item_name }}</h2>
+    <p>Description: {{ product.description }}</p>
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.item_name }} Image">
+    {% else %}
+        <img src="{% static 'images/default_image.jpg' %}" alt="Default image">
+
+
+    {% endif %}
+    <p>Price: {{ product.price }}</p>
+
+    {% if product.vendor == request.user %}
+    <a href="{% url 'edit_product' pk=product.pk %}">Edit</a>
+    <br>
+    <a href="{% url 'delete_product' pk=product.pk %}">Delete</a>
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <h2>{{ service.item_name }}</h2>
+    <p>Description: {{ service.description }}</p>
+
+    {% if service.image %}
+        <img src="{{ service.image.url }}" alt="{{ service.item_name }} Image">
+    {% else %}
+        <img src="{% static 'images/no_image.png' %}" alt="Default image">
+       
+
+    {% endif %}
+    <p>Active: {{ service.is_active }}</p>
+
+    {% if service.vendor == request.user %}
+        <a href="{% url 'edit_service' pk=service.pk %}">Edit</a>
+        <br>
+        <a href="{% url 'delete_service' pk=service.pk %}">Delete</a>
+
+    {% endif %}
+{% endblock %}
