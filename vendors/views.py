@@ -42,7 +42,8 @@ class ServiceCreateView(LoginRequiredMixin,CreateView):
 
 class ProductServiceListView(ListView):
     model = Product
-    template_name = "product_service_list.html"
+    # template_name = "product_service_list.html"
+    template_name = "p_and_s.html"
     context_object_name = "product_service_list"
 
     def get_queryset(self):
