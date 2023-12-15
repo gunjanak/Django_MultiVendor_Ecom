@@ -5,17 +5,7 @@
 {% block content %}
     <h2>Product and Service</h2>
 
-    {% if user.is_authenticated %}
-    <h3>
-        <a href="{% url 'user_product_service_list' %}">
-            Your Product and Services
-        </a>
-    </h3>
-    <h3>Create</h3>
-    <a href="{% url 'create_product' %}">Create a Product</a>
-    <br>
-    <a href="{% url 'create_service' %}">Create a Service</a>
-    {% endif %}
+   
 
 
     <h3>Products</h3>
