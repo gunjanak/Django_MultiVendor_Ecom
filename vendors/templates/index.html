@@ -2,6 +2,9 @@
 {% load static %}
 
 {% block content %}
+<h1>Product and Service Search</h1>
+
+
 <div class="container">
     <h2 class="mt-5 mb-4">Product List</h2>
 </div>
@@ -9,6 +12,15 @@
 <button id="toggleButton" class="btn btn-primary mb-3">
     Switch to Services
 </button>
+
+<div class="input-group mb-3">
+    <input type="text" id="searchInput" class="form-control" placeholder="Search">
+    <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" id="searchButton">
+            Search
+        </button>
+    </div>
+</div>
 <div id="content-list" class="row">
 
 </div>
@@ -19,6 +31,8 @@
 
 <script>
     $(document).ready(function(){
+        // Store a copy of the original data
+        var allDataOriginal = [];
         var allData = [];
         var loadedData = 0;
         var dataPerPage = 6;
@@ -131,6 +145,7 @@
                 url:currentUrl,
                 type:'GET',
                 success:function(data){
+                    allDataOriginal = data;
                     allData = data;
                     loadData();
                 }
@@ -142,6 +157,32 @@
             $('#toggleButton').text(buttonText);
 
         }
+
+        function performSearch(searchQuery){
+            console.log("**********at search query ***************");
+            console.log(searchQuery);
+            //Filter the data based on the search query
+            var filterData = allDataOriginal.filter(function (item) {
+                //Customize this condition based on your data structure and search criteria
+                return item.item_name.toLowerCase().includes(searchQuery.toLowerCase());
+
+
+            });
+            //Reset loaded data
+            loadedData = 0;
+             //Clear content list
+             $('#content-list').empty();
+
+             //Update allData with filtered data
+             console.log("***********filterData************");
+             console.log(filterData);
+             allData = filterData;
+
+             //trigger data loading
+             loadTriggred = true;
+              loadData();
+        }
+        
 
         loadDataFromUrl(currentUrl);
 
@@ -157,6 +198,27 @@
         $('#toggleButton').click(function (){
             switchUrl();
         });
+
+        //Add click event for the search button
+        $('#searchButton').click(function(){
+            var searchQuery = $('#searchInput').val();
+            performSearch(searchQuery);
+
+        });
+
+        // Add keypress event for the search input
+        $('#searchInput').on('keypress',function (e) {
+            console.log("enter pressed")
+            if (e.which === 13) {
+                // 13 is the key code for Enter
+                var searchQuery = $('#searchInput').val();
+                console.log(searchQuery);
+                performSearch(searchQuery);
+                return false;
+            }
+        });
+
+
     });
 </script>
 {% endblock %}
