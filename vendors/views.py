@@ -2,18 +2,22 @@ from typing import Any
 from django import http
 from django.db.models.query import QuerySet
 from django.forms.models import BaseModelForm
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render
 from django.views.generic.edit import CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView,DetailView
 from django.http import Http404
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+
 
 
 from vendors.models import Product,Service
 from vendors.forms import ProductForm, ServiceForm
-
+from vendors.serializers import ProductsSerializer,ServiceSerializer
 
 # Create your views here.
 
@@ -112,3 +116,35 @@ class UserProductServiceListView(LoginRequiredMixin,ListView):
         service_queryset = Service.objects.filter(vendor = user)
         return {'products':product_queryset,'services':service_queryset}
     
+
+
+def get_products(request,offset):
+    products = Product.objects.all()[offset:offset +12]
+    data = [{'name':product.item_name,'image':product.image.url,
+             'vendor':product.vendor.username}
+             for product in products]
+    return JsonResponse({'data':data})
+
+
+def get_services(request,offset):
+    services = Service.objects.all()[offset:offset +12]
+    data = [{'name':service.item_name,'image':service.image.url,
+             'vendor':str(service.vendor.username)} for service in services]
+    return JsonResponse({'data':data})
+
+
+@api_view(['GET'])
+def product_list(request):
+    products = Product.objects.all()
+    serializer = ProductsSerializer(products,many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def service_list(request):
+    services = Service.objects.all()
+    serializer = ServiceSerializer(services,many=True)
+    return Response(serializer.data)
+
+
+def index(request):
+    return render(request,'index.html')
