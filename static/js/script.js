@@ -9,6 +9,39 @@ $(document).ready(function(){
     var loadTriggred = true;
     var currentUrl = '/products/';
 
+    var minPrice = null;
+    var maxPrice = null;
+
+    //Function to update price range filters values
+    function updatePriceRangeFilter(){
+        console.log("calling updatePriceRangeFilter");
+        minPrice = parseFloat($('#minPriceInput').val()) || null;
+        maxPrice = parseFloat($('#maxPriceInput').val()) || null;
+
+        //Trigger data loading with updated filter values
+        loadedData = 0;
+        $('#content-list').empty();
+        loadTriggred = true;
+        loadData();
+
+    }
+
+    //Function to reset price range filters
+    function resetPriceRangeFilters(){
+        $('#minPriceInput').val('');
+        $('#maxPriceInput').val('');
+        updatePriceRangeFilter();
+    }
+
+    //Add event listeners for price range inputs
+    $('#minPriceInput,#maxPriceInput').on('input',updatePriceRangeFilter);
+
+    //Add event listener for reset button
+    $('#resetFiltersButton').click(function(){
+        resetPriceRangeFilters();
+
+    });
+
     function loadData() {
         if (isLoading || !loadTriggred){
             return;
@@ -18,6 +51,19 @@ $(document).ready(function(){
 
         //Get the next set of products based on the current offset
         var nextData = allData.slice(loadedData,loadedData+dataPerPage);
+
+        //Filter data based on price range
+        nextData = nextData.filter(function(item) {
+            if(minPrice !== null && item.price < minPrice){
+                return false;
+            }
+            if (maxPrice !== null && item.price > maxPrice){
+                return false;
+            }
+            return true;
+        });
+
+
         //Loop through the next set of products and them to the list
         for(var i=0; i<nextData.length; i++){
             //Create a bootstrap card for each product
@@ -37,7 +83,7 @@ $(document).ready(function(){
             // console.log(imageSrc);
            
             var dataId = nextData[i].id;
-            console.log(typeof dataId);
+            // console.log(typeof dataId);
 
             if(currentUrl === '/products/'){
                 var dataUrl = "{% url 'product_detail' 1%}"
@@ -47,7 +93,7 @@ $(document).ready(function(){
             }
             
             dataUrl = dataUrl.replace('1',dataId);
-            console.log(dataUrl);
+            // console.log(dataUrl);
             var detailsLink = $('<a>').attr('href', dataUrl).addClass('btn btn-primary').text('Details');
 
             
@@ -66,8 +112,9 @@ $(document).ready(function(){
             loadedData++;
 
         }
+        loadedData += nextData.length;
 
-        isLoading = false;
+        
 
         //Hide loading message if no more products
         if(loadedData >= allData.length){
@@ -76,7 +123,16 @@ $(document).ready(function(){
             $("#loading-message").text("loading");
         }
 
+        isLoading = false;
         loadTriggred = false;
+
+        //     // Add filters for price range
+        // $('#content-list').before('<div class="row mb-3"><div class="col-md-6"><label for="minPriceInput">Min Price:</label><input type="number" class="form-control" id="minPriceInput" placeholder="Min Price"></div><div class="col-md-6"><label for="maxPriceInput">Max Price:</label><input type="number" class="form-control" id="maxPriceInput" placeholder="Max Price"></div></div>');
+
+        // // Add reset button for filters
+        // $('#content-list').before('<button class="btn btn-secondary" id="resetFiltersButton">Reset Filters</button>');
+
+
 
     }
 
@@ -123,8 +179,8 @@ $(document).ready(function(){
     }
 
     function performSearch(searchQuery){
-        console.log("**********at search query ***************");
-        console.log(searchQuery);
+        // console.log("**********at search query ***************");
+        // console.log(searchQuery);
         //Filter the data based on the search query
         var filterData = allDataOriginal.filter(function (item) {
             //Customize this condition based on your data structure and search criteria
@@ -138,8 +194,8 @@ $(document).ready(function(){
          $('#content-list').empty();
 
          //Update allData with filtered data
-         console.log("***********filterData************");
-         console.log(filterData);
+        //  console.log("***********filterData************");
+        //  console.log(filterData);
          allData = filterData;
 
          //trigger data loading
@@ -172,11 +228,11 @@ $(document).ready(function(){
 
     // Add keypress event for the search input
     $('#searchInput').on('keypress',function (e) {
-        console.log("enter pressed")
+        // console.log("enter pressed")
         if (e.which === 13) {
             // 13 is the key code for Enter
             var searchQuery = $('#searchInput').val();
-            console.log(searchQuery);
+            // console.log(searchQuery);
             performSearch(searchQuery);
             return false;
         }
