@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     
     'accounts',
     'vendors',
+    'cart',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'rest_framework',
+
 
     
 ]
@@ -152,3 +154,6 @@ MEDIA_URL = '/media/'
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]  
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+
+CART_SESSION_ID = "cart"
