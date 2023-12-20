@@ -51,7 +51,13 @@
                 </td>
 
                 <td>
-                    {{item.quantity}}
+                  
+                    <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                        {{ item.form }}
+                       
+                        <input type="submit" value="Update">
+                        {% csrf_token %}
+                    </form>
                 </td>
 
                 <td>

@@ -41,9 +41,12 @@ class Cart:
         """
         Remove a product from the cart
         """
-        produt_id = str(product.id)
-        if produt_id in self.cart:
-            del self.cart['product_id']
+        print("This is cart")
+        print(self.cart)
+        
+        product_id = str(product.id)
+        if product_id in self.cart:
+            del self.cart[product_id]
             self.save()
 
     def __iter__(self):

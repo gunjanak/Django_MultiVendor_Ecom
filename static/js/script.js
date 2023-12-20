@@ -42,6 +42,21 @@ $(document).ready(function(){
 
     });
 
+    function loadDataFromUrl(url){
+        //simulate getting all products from Django backend and storing them in allProducts array
+        $.ajax({
+            url:currentUrl,
+            type:'GET',
+            success:function(data){
+                allDataOriginal = data;
+                allData = data;
+                console.log(allData);
+                loadData();
+            }
+        });
+    }
+
+
     function loadData() {
         if (isLoading || !loadTriggred){
             return;
@@ -49,11 +64,8 @@ $(document).ready(function(){
 
         isLoading = true;
 
-        //Get the next set of products based on the current offset
-        var nextData = allData.slice(loadedData,loadedData+dataPerPage);
-
-        //Filter data based on price range
-        nextData = nextData.filter(function(item) {
+         //Filter data based on price range
+         allData = allDataOriginal.filter(function(item) {
             if(minPrice !== null && item.price < minPrice){
                 return false;
             }
@@ -62,6 +74,14 @@ $(document).ready(function(){
             }
             return true;
         });
+
+        //Get the next set of products based on the current offset
+        var nextData = allData.slice(loadedData,loadedData+dataPerPage);
+        // console.log("***inside loadData function ****");
+        // console.log(loadedData);
+        // console.log(nextData);
+
+       
 
 
         //Loop through the next set of products and them to the list
@@ -86,15 +106,16 @@ $(document).ready(function(){
             // console.log(typeof dataId);
 
             if(currentUrl === '/products/'){
-                var dataUrl = "{% url 'product_detail' 1%}"
+                var dataUrl = "product/1/"
 
             }else {
-                var dataUrl = "{% url 'service_detail' 1%}"
+                var dataUrl = "service/1/"
             }
             
             dataUrl = dataUrl.replace('1',dataId);
-            // console.log(dataUrl);
+            console.log(dataUrl);
             var detailsLink = $('<a>').attr('href', dataUrl).addClass('btn btn-primary').text('Details');
+            console.log(detailsLink);
 
             
             //Create a card body
@@ -112,7 +133,7 @@ $(document).ready(function(){
             loadedData++;
 
         }
-        loadedData += nextData.length;
+        // loadedData += nextData.length;
 
         
 
@@ -159,18 +180,7 @@ $(document).ready(function(){
 
     }
 
-    function loadDataFromUrl(url){
-        //simulate getting all products from Django backend and storing them in allProducts array
-        $.ajax({
-            url:currentUrl,
-            type:'GET',
-            success:function(data){
-                allDataOriginal = data;
-                allData = data;
-                loadData();
-            }
-        });
-    }
+    
 
     function updateButtonText(){
         var buttonText = currentUrl === '/products/' ? 'Switch to Services': 'Switch to Products';

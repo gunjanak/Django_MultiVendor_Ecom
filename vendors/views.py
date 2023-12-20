@@ -9,8 +9,12 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView,DetailView
 from django.http import Http404
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+
+from cart.forms import CartAddProductForm
+
 
 
 
@@ -63,7 +67,13 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = "product_detail.html"
     context_object_name = "product"
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cart_form'] = CartAddProductForm()
+        return context
+    
+    
 class ServiceDetailView(DetailView):
     model = Service
     template_name = "service_detail.html"
