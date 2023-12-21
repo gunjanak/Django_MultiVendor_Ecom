@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container">
+        <h2>{{ user.username }}'s Profile</h2>
+        
+        <div class="row">
+            <div class="col-md-4">
+                {% if object.image %}
+                    <img src="{{ object.image.url }}" alt="{{ user.username }}'s Profile Image" class="img-fluid rounded-circle">
+                {% else %}
+                    
+                    <img src="{% static 'img/no_image.png' %}" alt="Default Profile Image" class="img-fluid rounded-circle">
+                    {% endif %}
+            </div>
+            
+            <div class="col-md-8">
+                <p>First Name: {{ object.first_name }}</p>
+                <p>Last Name: {{ object.last_name }}</p>
+                <p>Email: {{ object.email }}</p>
+                <p>Address: {{ object.address }}</p>
+                <p>Postal Code: {{ object.postal_code }}</p>
+                <p>City: {{ object.city }}</p>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

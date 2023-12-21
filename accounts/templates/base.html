@@ -103,7 +103,14 @@
                                 Your Products and Services
 
                             </a>
-                        </li>             
+                        </li>   
+                        <li class="nav-item">
+                           
+                            <a class="nav-link" href="{% url 'profiles:profile_detail' user.profile.pk %}">
+                                Your Profile
+                            </a>
+
+                        </li>          
                 </ul>
 
                 <ul class="navbar-nav">
