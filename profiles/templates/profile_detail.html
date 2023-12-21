@@ -7,8 +7,8 @@
         
         <div class="row">
             <div class="col-md-4">
-                {% if object.image %}
-                    <img src="{{ object.image.url }}" alt="{{ user.username }}'s Profile Image" class="img-fluid rounded-circle">
+                {% if profile.image %}
+                    <img src="{{ profile.image.url }}" alt="{{ user.username }}'s Profile Image" class="img-fluid rounded-circle">
                 {% else %}
                     
                     <img src="{% static 'img/no_image.png' %}" alt="Default Profile Image" class="img-fluid rounded-circle">
@@ -16,12 +16,14 @@
             </div>
             
             <div class="col-md-8">
-                <p>First Name: {{ object.first_name }}</p>
-                <p>Last Name: {{ object.last_name }}</p>
-                <p>Email: {{ object.email }}</p>
-                <p>Address: {{ object.address }}</p>
-                <p>Postal Code: {{ object.postal_code }}</p>
-                <p>City: {{ object.city }}</p>
+                <p>First Name: {{ profile.first_name }}</p>
+                <p>Last Name: {{ profile.last_name }}</p>
+                <p>Email: {{ profile.email }}</p>
+                <p>Address: {{ profile.address }}</p>
+                <p>Postal Code: {{ profile.postal_code }}</p>
+                <p>City: {{ profile.city }}</p>
+                <a href="{% url 'profiles:profile_update' user.profile.pk %}">Update Profile</a>
+                
             </div>
         </div>
 
