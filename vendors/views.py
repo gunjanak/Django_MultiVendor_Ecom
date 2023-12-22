@@ -33,6 +33,14 @@ class ProductCreateView(LoginRequiredMixin,CreateView):
 
     def form_valid(self, form):
         form.instance.vendor = self.request.user
+
+        if 'save_and_add_new' in self.request.POST:
+            #save and add new logic here
+            self.success_url = reverse_lazy("create_product")
+        elif 'save' in self.request.POST:
+            #Save logic here
+            self.success_url = reverse_lazy("home")
+
         return super().form_valid(form)
 
 class ServiceCreateView(LoginRequiredMixin,CreateView):
@@ -143,18 +151,37 @@ def get_services(request,offset):
     return JsonResponse({'data':data})
 
 
-@api_view(['GET'])
-def product_list(request):
+
+
+
+# def index(request):
+#     return render(request,'index.html')
+
+def product_servict_list(request,category='products'):
     products = Product.objects.all()
-    serializer = ProductsSerializer(products,many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def service_list(request):
     services = Service.objects.all()
-    serializer = ServiceSerializer(services,many=True)
-    return Response(serializer.data)
 
+    #handle search logic
+    search_query = request.GET.get('search',"")
+    if search_query:
+        products = products.filter(item_name__icontains=search_query)
+        services = services.filter(item_name__icontains=search_query)
 
-def index(request):
-    return render(request,'index.html')
+    #Handle price range filtering 
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+
+    if min_price:
+        products = products.filter(price__gte=min_price)
+        # services = services.filter(service_fee_gte=min_price)
+    if max_price:
+        products = products.filter(price__lte=max_price)
+        # services = services.filter(service_fee__lte=max_price)
+
+        
+    
+    return render(request,'index2.html',
+                  {'products':products,
+                   'services':services,
+                   'category':category})
+

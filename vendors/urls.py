@@ -2,7 +2,7 @@ from django.urls import path
 from vendors.views import (ProductCreateView, ServiceCreateView, ProductServiceListView,
                            ProductDetailView,ServiceDetailView,ProductUpdateView,ServiceUpdateView,
                            ProductDeleteView,ServiceDeleteView,UserProductServiceListView,
-                           index,get_products,get_services,product_list,service_list)
+                           get_products,get_services,product_servict_list)
 
 
 urlpatterns = [
@@ -20,9 +20,10 @@ urlpatterns = [
     # path("",index,name=index),
     path('get_products/<int:offset>/',get_products,name='get_products'),
     path('get_services/<int:offset>/',get_services,name='get_services'),
-    path('products/',product_list,name='product_list'),
-    path('services/',service_list,name="service_list"),
-    path("",index,name="home"),
+    # path('products/',product_list,name='product_list'),
+    # path('services/',service_list,name="service_list"),
+    # path("",index,name="home"),
+    path("",product_servict_list,name="home"),
 
 
 

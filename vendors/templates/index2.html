@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>
+    Product List
+</h1>
+
+
+
+<form method="GET" action="{% url 'home' %}">
+    <label for="search">Search:</label>
+    <input type="text" id="search" name="search">
+    
+    <label for="min_price">Min Price:</label>
+    <input type="number" id="min_price" name="min_price" step="0.01">
+    
+    <label for="max_price">Max Price:</label>
+    <input type="number" id="max_price" name="max_price" step="0.01">
+    
+    <button type="submit">Filter</button>
+</form>
+
+
+<button onclick="toggleCategory()" id="toggleButton">
+Switch to Services
+</button>
+
+<ul id="product_list" {% if category == 'services' %} style="display: none;" {% endif %}>
+
+    {% for product in products %}
+        <li>
+            {{product.item_name}}
+        </li>
+
+    {% endfor %}
+</ul>
+
+
+<ul id="service_list" {% if category == 'products' %} style="display: none;" {% endif %}>
+
+    {% for service in services %}
+        <li>
+            {{service.item_name}}
+        </li>
+
+    {% endfor %}
+</ul>
+<script>
+    function toggleCategory(){
+        console.log("Button clicked");
+        const toggleButton = document.getElementById('toggleButton');
+        console.log(toggleButton.innerText)
+        var productList = document.getElementById('product_list');
+        var serviceList = document.getElementById('service_list');
+
+        if (productList.style.display === 'none'){
+            productList.style.display = 'block';
+            serviceList.style.display = 'none';
+            toggleButton.innerText = 'Switch to Services'
+        } else {
+            productList.style.display = 'none';
+            serviceList.style.display = 'block';
+            toggleButton.innerText = 'Switch to Products'
+        }
+    }
+</script>
+{% endblock %}

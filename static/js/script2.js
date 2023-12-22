@@ -1,65 +1,45 @@
 $(document).ready(function(){
     console.log("hey you");
-    // Store a copy of the original data
-    var allDataOriginal = [];
+
+    //Store a copy of the original
+    var allDataOriginal = []
     var allData = [];
     var loadedData = 0;
     var dataPerPage = 6;
     var isLoading = false;
     var loadTriggred = true;
     var currentUrl = '/products/';
-
     var minPrice = null;
     var maxPrice = null;
 
-    //Function to update price range filters values
-    function updatePriceRangeFilter(){
-        //console.log("calling updatePriceRangeFilter");
-        minPrice = parseFloat($('#minPriceInput').val()) || null;
-        maxPrice = parseFloat($('#maxPriceInput').val()) || null;
+ 
 
-        //Trigger data loading with updated filter values
-        loadedData = 0;
-        $('#content-list').empty();
-        loadDataFromUrl(currentUrl);
-        loadTriggred = true;
-        loadData();
-
-    }
-
-    //Function to reset price range filters
-    function resetPriceRangeFilters(){
-        $('#minPriceInput').val('');
-        $('#maxPriceInput').val('');
-        
-        updatePriceRangeFilter();
-    }
-
-    //Add event listeners for price range inputs
-    $('#minPriceInput,#maxPriceInput').on('input',updatePriceRangeFilter);
-
-    //Add event listener for reset button
-    $('#resetFiltersButton').click(function(){
-        resetPriceRangeFilters();
-
-    });
-
-   
-
-
-    function loadDataFromUrl(url){
-        //simulate getting all products from Django backend and storing them in allProducts array
+    //Function to load data from the API with filters and search
+    function loadDataFromApi(){
         $.ajax({
             url:currentUrl,
             type:'GET',
-            success:function(data){
+            data:{
+                min_price:minPrice,
+                max_price:maxPrice,
+                search:$('#searchInput').val(),
+            },
+
+            success: function(data){
                 allDataOriginal = data;
                 allData = data;
-                //console.log(allData);
+                loadedData = 0;
+                $('#content-list').empty();
                 loadData();
+                console.log(allDataOriginal);
             }
+
         });
     }
+
+
+
+
 
 
     function loadData() {
@@ -68,23 +48,6 @@ $(document).ready(function(){
         }
 
         isLoading = true;
-
-         //Filter data based on price range
-         allData = allData.filter(function(item) {
-            if(minPrice !== null && item.price < minPrice){
-                return false;
-            }
-            if (maxPrice !== null && item.price > maxPrice){
-                return false;
-            }
-            return true;
-        });
-
-        //Get the next set of products based on the current offset
-        var nextData = allData.slice(loadedData,loadedData+dataPerPage);
-        // console.log("***inside loadData function ****");
-        // console.log(loadedData);
-        // console.log(nextData);
 
        
 
@@ -162,34 +125,7 @@ $(document).ready(function(){
 
     }
 
-    function performSearch(searchQuery){
-        console.log("**********at search query ***************");
-        console.log(searchQuery);
-       
-        console.log(allDataOriginal);
-
-        //Filter the data based on the search query
-        var filterData = allDataOriginal.filter(function (item) {
-            //Customize this condition based on your data structure and search criteria
-            return item.item_name.toLowerCase().includes(searchQuery.toLowerCase());
-
-
-        });
-        //Reset loaded data
-        loadedData = 0;
-         //Clear content list
-         $('#content-list').empty();
-
-         //Update allData with filtered data
-        console.log("***********filterData************");
-        console.log(filterData);
-         allData = filterData;
-
-         //trigger data loading
-         loadTriggred = true;
-          loadData();
-    }
-
+   
     function switchUrl(){
         if(currentUrl === '/products/'){
             currentUrl = '/services/';
@@ -207,7 +143,7 @@ $(document).ready(function(){
         //Trigger data loading
         loadTriggred = true;
 
-        loadDataFromUrl(currentUrl);
+        loadDataFromApi(currentUrl);
         //Update button text
         updateButtonText();
 
@@ -224,7 +160,7 @@ $(document).ready(function(){
     
     
 
-    loadDataFromUrl(currentUrl);
+    loadDataFromApi();
 
     //Load more products as the user scrolls down
     $(window).scroll(function () {
@@ -239,24 +175,8 @@ $(document).ready(function(){
         switchUrl();
     });
 
-    //Add click event for the search button
-    $('#searchButton').click(function(){
-        var searchQuery = $('#searchInput').val();
-        performSearch(searchQuery);
-
-    });
-
-    // Add keypress event for the search input
-    $('#searchInput').on('keypress',function (e) {
-        // console.log("enter pressed")
-        if (e.which === 13) {
-            // 13 is the key code for Enter
-            var searchQuery = $('#searchInput').val();
-            // console.log(searchQuery);
-            performSearch(searchQuery);
-            return false;
-        }
-    });
+   
+   
 
 
-});
+})

@@ -8,9 +8,12 @@
    </h2>
    <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">
+    {{ form|crispy }}
+    <button type="submit" name="save">
         Create Product
+    </button>
+    <button type="submit" name="save_and_add_new">
+        Save and Add New
     </button>
    </form>
 {% endblock %}
