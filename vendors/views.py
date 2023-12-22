@@ -158,6 +158,10 @@ def get_services(request,offset):
 #     return render(request,'index.html')
 
 def product_servict_list(request,category='products'):
+    
+    category = request.GET.get('category','products')
+    print(category)
+
     products = Product.objects.all()
     services = Service.objects.all()
 
@@ -180,7 +184,7 @@ def product_servict_list(request,category='products'):
 
         
     
-    return render(request,'index2.html',
+    return render(request,'index.html',
                   {'products':products,
                    'services':services,
                    'category':category})
