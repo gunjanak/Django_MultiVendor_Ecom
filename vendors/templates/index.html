@@ -55,7 +55,12 @@
 
                         <div class="card-body">
                             <h5 class="card-title">{{ product.item_name }}</h5>
-                            <p class="card-text">Vendor: {{ product.vendor }}</p>
+                            <p class="card-text">
+                                
+                                <a class="nav-link" href="{% url 'profiles:profile_detail' product.vendor.profile.id%}">
+                                    Vendor: {{product.vendor}}
+                                </a>
+                            </p>
                             <p class="card-text">Price: ${{ product.price }}</p>
                             <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">View Details</a>
                         </div>

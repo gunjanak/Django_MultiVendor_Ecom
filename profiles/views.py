@@ -36,7 +36,7 @@ class ProfileUpdateView(LoginRequiredMixin,UpdateView):
     def get_success_url(self):
         return reverse_lazy("profiles:profile_detail",kwargs={'pk':self.request.user.profile.pk})
 
-class ProfileDetailView(LoginRequiredMixin,DetailView):
+class ProfileDetailView(DetailView):
     model = Profile
     template_name = "profile_detail.html"
 

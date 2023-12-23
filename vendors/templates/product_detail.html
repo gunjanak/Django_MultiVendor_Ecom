@@ -2,31 +2,30 @@
 {% load static %}
 
 {% block content %}
-    <h2>{{ product.item_name }}</h2>
-    <p>Description: {{ product.description }}</p>
-    {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.item_name }} Image">
-    {% else %}
-        <img src="{% static 'images/default_image.jpg' %}" alt="Default image">
+    <div class="container my-4">
+        <h2 class="mb-3">{{ product.item_name }}</h2>
+        <p class="mb-3">Description: {{ product.description }}</p>
+        
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.item_name }} Image" class="img-fluid mb-3">
+        {% else %}
+            <img src="{% static 'images/default_image.jpg' %}" alt="Default image" class="img-fluid mb-3">
+        {% endif %}
+        
+        <p class="mb-3">Price: {{ product.price }}</p>
+        <h5 class="mb-3"><a class="nav-link" href="{% url 'profiles:profile_detail' product.vendor.profile.id%}">Vendor: {{product.vendor}}</a></h5>
+        
+        {% if product.vendor == request.user %}
+            <div class="mb-3">
+                <a href="{% url 'edit_product' pk=product.pk %}" class="btn btn-outline-primary mr-2">Edit</a>
+                <a href="{% url 'delete_product' pk=product.pk %}" class="btn btn-outline-danger">Delete</a>
+            </div>
+        {% endif %}
 
-
-    {% endif %}
-    <p>Price: {{ product.price }}</p>
-
-    {% if product.vendor == request.user %}
-    <a href="{% url 'edit_product' pk=product.pk %}">Edit</a>
-    <br>
-    <a href="{% url 'delete_product' pk=product.pk %}">Delete</a>
-
-    
-
-{% endif %}
-
-<form method="post" action="{% url 'cart:cart_add' product.id %}">
-    {% csrf_token %}
-    {{ cart_form.as_p }}
-    <button type="submit">
-        Add to Cart
-    </button>
-</form>
+        <form method="post" action="{% url 'cart:cart_add' product.id %}" class="mb-3">
+            {% csrf_token %}
+            {{ cart_form.as_p }}
+            <button type="submit" class="btn btn-success">Add to Cart</button>
+        </form>
+    </div>
 {% endblock %}
