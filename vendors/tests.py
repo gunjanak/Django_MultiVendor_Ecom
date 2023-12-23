@@ -1,9 +1,11 @@
 from django.test import TestCase
 
 from vendors.models import ProductCategory, ServiceCategory, CommonFields, Product,Service,CustomUser
-
+from vendors.forms import ServiceForm, ProductForm
 
 # Create your tests here.
+
+#Testing models
 class ProductCategoryModelTest(TestCase):
 
     @classmethod
@@ -154,3 +156,71 @@ class ServiceModelTest(TestCase):
                 item_name='Test Common Fields',
                 description='Test Common Fields Description',
             )
+
+
+#Test case for forms
+class ProductFormTest(TestCase):
+    def setUp(self):
+        # Create a ProductCategory for testing
+        self.category = ProductCategory.objects.create(name='Electronics')
+
+    def test_product_form_valid_data(self):
+        form_data = {
+            'item_name': 'Test Product',
+            'description': 'Test Product Description',
+            'image': 'product_images/test_image.jpg',
+            'category': self.category.id,
+            'items_in_store': 10,
+            'price': 99.99,
+        }
+        form = ProductForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_product_form_missing_required_field(self):
+        form_data = {
+            'item_name': 'Test Product',
+            'description': 'Test Product Description',
+            'image': 'product_images/test_image.jpg',
+            'category': '',  # Missing required field
+            'items_in_store': 10,
+            'price': 99.99,
+        }
+        form = ProductForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('category', form.errors.keys())
+
+class ServiceFormTest(TestCase):
+    def setUp(self):
+        # Create a ServiceCategory for testing
+        self.service_category = ServiceCategory.objects.create(name='Cleaning')
+
+    def test_service_form_valid_data(self):
+        form_data = {
+            'item_name': 'Test Service',
+            'description': 'Test Service Description',
+            'image': 'service_images/test_image.jpg',
+            'category': self.service_category.id,
+            'is_active': True,
+            'pricing_type': 'hourly',
+            'hourly_rate': 25.50,
+            'daily_rate': None,  # Optional field
+            'per_job_rate': None,  # Optional field
+        }
+        form = ServiceForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_service_form_missing_required_field(self):
+        form_data = {
+            'item_name': 'Test Service',
+            'description': 'Test Service Description',
+            'image': 'service_images/test_image.jpg',
+            'category': '',  # Missing required field
+            'is_active': True,
+            'pricing_type': 'hourly',
+            'hourly_rate': 25.50,
+            'daily_rate': None,
+            'per_job_rate': None,
+        }
+        form = ServiceForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('category', form.errors.keys())

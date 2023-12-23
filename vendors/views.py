@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView,DetailView
 from django.http import Http404
+from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -168,8 +169,13 @@ def product_servict_list(request,category='products'):
     #handle search logic
     search_query = request.GET.get('search',"")
     if search_query:
-        products = products.filter(item_name__icontains=search_query)
-        services = services.filter(item_name__icontains=search_query)
+        search_filter = (
+            Q(item_name__icontains =search_query)|
+            Q(vendor__username__icontains = search_query)|
+            Q(category__name__icontains = search_query)
+        )
+        products = products.filter(search_filter)
+        services = services.filter(search_filter)
 
     #Handle price range filtering 
     min_price = request.GET.get('min_price')
