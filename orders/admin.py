@@ -5,8 +5,22 @@ import csv
 import datetime
 
 from orders.models import Order,OrderItem
+from orders.utils import VendorShop
 
 # Register your models here.
+
+@admin.action(description="Paid Done")
+def payment_done(ModelAdmin,request,queryset):
+    print(Order)
+    queryset.update(paid=True)
+
+    #Retrieve and print the orders for which the action has been applied
+    updated_orders = Order.objects.filter(id__in=queryset.values_list('id',flat=True))
+    for order in updated_orders:
+        print(order.id)
+        VendorShop(order.id)
+
+
 def export_to_csv(ModelAdmin,request,queryset):
     opts = ModelAdmin.model._meta
     content_disposition= f'attachement;filename={opts.verbose_name}.csv'
@@ -45,5 +59,5 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['id','first_name','last_name','email','address','postal_code','city','paid','created','updated']
     list_filter = ['paid','created','updated']
     inlines = [OrderItemInline]
-    actions = [export_to_csv]
+    actions = [export_to_csv,payment_done]
 

@@ -1,19 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Your Products and Services</h2>
+<div class="container">
+    <h3>All Products</h3>
 
-    <h3>Products</h3>
-    <ul>
-        {% for product in user_product_service_list.products %}
-            <li>
-                <a href="{% url 'product_detail' pk=product.pk %}">
-                    {{ product.item_name}}
-                </a>
-            </li>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Sold</th>
+                <th>Pending Orders</th>
+                <th>Earning</th>
+                <th>In Store</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in user_product_service_list.allProducts %}
+            <tr>
+                <td>
+                    <a href="{% url 'product_detail' pk=item.product.pk %}">
+                        {{ item.product }}
+                    </a>
+                </td>
+                <td>{{ item.total_sold }}</td>
+                <td>{{ item.PendingOrders }}</td>
+                <td>{{ item.Earning }}</td>
+                <td>{{ item.product.items_in_store }}</td>
+               
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-        {% endfor %}
-    </ul>
+    <p>Total Earning: {{ user_product_service_list.totalEarning }}</p>
+</div>
+
+
 
     <h3>Services</h3>
     <ul>
@@ -30,5 +53,9 @@
         {% endfor %}
 
     </ul>
+
+  
+
+   
 
 {% endblock %}

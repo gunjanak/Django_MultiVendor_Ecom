@@ -15,6 +15,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 from cart.forms import CartAddProductForm
+from orders.models import Order,OrderItem
 
 
 
@@ -133,7 +134,33 @@ class UserProductServiceListView(LoginRequiredMixin,ListView):
         user = self.request.user
         product_queryset = Product.objects.filter(vendor=user)
         service_queryset = Service.objects.filter(vendor = user)
-        return {'products':product_queryset,'services':service_queryset}
+
+        #All the orderItem related to the vendor
+        orderItem_queryset = OrderItem.objects.filter(product__vendor=user)
+        all_my_products = []
+        for product in product_queryset:
+            product_sell = {}
+            print(product.item_name)
+            product_sold = 0
+            pending_orders = 0
+            for order in orderItem_queryset:
+                if(order.product == product):
+                    if(order.order.paid):
+                        product_sold += order.quantity
+                    else:
+                        pending_orders += order.quantity
+            product_sell["product"] = product
+            product_sell["total_sold"] = product_sold
+            product_sell["PendingOrders"] = pending_orders
+            product_sell["Earning"] = product_sold*product.price
+            product_sell['In Store'] = product.items_in_store
+            # print(product_sell)
+            all_my_products.append(product_sell)
+        print(all_my_products)
+        total_earning = sum(item['Earning'] for item in all_my_products)
+
+        return {'products':product_queryset,'services':service_queryset,'orderitems':orderItem_queryset,
+                'allProducts':all_my_products,"totalEarning":total_earning}
     
 
 
