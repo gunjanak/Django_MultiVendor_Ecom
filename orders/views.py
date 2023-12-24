@@ -13,6 +13,7 @@ def order_create_view(request):
         if form.is_valid():
             order = form.save(commit=False)
             order.save()
+            print(order)
 
             for item in cart:
                 OrderItem.objects.create(order=order,

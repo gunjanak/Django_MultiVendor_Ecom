@@ -12,7 +12,7 @@
         <ul>
             {% for item in cart %}
             <li>
-                {{item.quantity}}x{{item.product.name}}
+                {{item.quantity}}x{{item.product.item_name}}
                 <span>
                     ${{item.total_price}}
                 </span>
