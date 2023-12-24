@@ -1,11 +1,19 @@
+from typing import Any
 from django import forms
 from django.forms import widgets
+from django.core.exceptions import ValidationError
 
-PRODUCT_QUANTITY_CHOICES = [(i,str(i)) for i in range(1,21)]
 
 
 class CartAddProductForm(forms.Form):
-    # quantity = forms.TypedChoiceField(choices=PRODUCT_QUANTITY_CHOICES,coerce=int)
     quantity = forms.IntegerField()
     override = forms.BooleanField(required=False,initial=False,widget=forms.HiddenInput)
-    
+
+  
+    def clean_quantity(self):
+        quantity = self.cleaned_data['quantity']
+        product = self.product
+
+        if quantity > product.items_in_store:
+            raise ValidationError(f"Only {product.items_in_store} items available")
+        return quantity

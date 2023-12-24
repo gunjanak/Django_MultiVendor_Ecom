@@ -30,7 +30,7 @@ from vendors.serializers import ProductsSerializer,ServiceSerializer
 class ProductCreateView(LoginRequiredMixin,CreateView):
     model = Product
     form_class = ProductForm
-    template_name = "create_product.html"
+    template_name = "vendors/create_product.html"
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
@@ -48,7 +48,7 @@ class ProductCreateView(LoginRequiredMixin,CreateView):
 class ServiceCreateView(LoginRequiredMixin,CreateView):
     model = Service
     form_class = ServiceForm
-    template_name = "create_service.html"
+    template_name = "vendors/create_service.html"
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
@@ -61,7 +61,7 @@ class ServiceCreateView(LoginRequiredMixin,CreateView):
 class ProductServiceListView(ListView):
     model = Product
     # template_name = "product_service_list.html"
-    template_name = "p_and_s.html"
+    template_name = "vendors/p_and_s.html"
     context_object_name = "product_service_list"
 
     def get_queryset(self):
@@ -75,7 +75,7 @@ class ProductServiceListView(ListView):
 
 class ProductDetailView(DetailView):
     model = Product
-    template_name = "product_detail.html"
+    template_name = "vendors/product_detail.html"
     context_object_name = "product"
     
     def get_context_data(self, **kwargs):
@@ -86,7 +86,7 @@ class ProductDetailView(DetailView):
     
 class ServiceDetailView(DetailView):
     model = Service
-    template_name = "service_detail.html"
+    template_name = "vendors/service_detail.html"
     context_object_name = "service"
 
 
@@ -104,30 +104,30 @@ class VendorRequiredMixin(LoginRequiredMixin):
 class ProductUpdateView(VendorRequiredMixin,UpdateView):
     model = Product
     form_class = ProductForm
-    template_name = "edit_product.html"
+    template_name = "vendors/edit_product.html"
     success_url = reverse_lazy("home")
 
 class ServiceUpdateView(VendorRequiredMixin,UpdateView):
     model = Service
     form_class = ServiceForm
-    template_name = "edit_service.html"
+    template_name = "vendors/edit_service.html"
     success_url = reverse_lazy('home')
 
 
 class ProductDeleteView(VendorRequiredMixin,DeleteView):
     model = Product
     context_object_name = "product"
-    template_name = "delete_product.html"
+    template_name = "vendors/delete_product.html"
     success_url = reverse_lazy("home")
 
 class ServiceDeleteView(VendorRequiredMixin,DeleteView):
     model = Service
     context_object_name = "service"
-    template_name = "delete_service.html"
+    template_name = "vendors/delete_service.html"
     success_url = reverse_lazy("home")
 
 class UserProductServiceListView(LoginRequiredMixin,ListView):
-    template_name = "user_product_service_list.html"
+    template_name = "vendors/user_product_service_list.html"
     context_object_name = "user_product_service_list"
 
     def get_queryset(self):
@@ -217,7 +217,7 @@ def product_servict_list(request,category='products'):
 
         
     
-    return render(request,'index.html',
+    return render(request,'vendors/index.html',
                   {'products':products,
                    'services':services,
                    'category':category})

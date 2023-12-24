@@ -13,6 +13,7 @@
         {% endif %}
         
         <p class="mb-3">Price: {{ product.price }}</p>
+        <p class="mb-3">Items in Stock: {{product.items_in_store}}</p>
         <h5 class="mb-3"><a class="nav-link" href="{% url 'profiles:profile_detail' product.vendor.profile.id%}">Vendor: {{product.vendor}}</a></h5>
         
         {% if product.vendor == request.user %}
@@ -25,6 +26,12 @@
         <form method="post" action="{% url 'cart:cart_add' product.id %}" class="mb-3">
             {% csrf_token %}
             {{ cart_form.as_p }}
+            {% if cart_form.errors.quantity %}
+                <div class="alert alert-danger" role="alert">
+                    {{ cart_form.errors.quantity }}
+                </div>
+            {% endif %}
+            
             <button type="submit" class="btn btn-success">Add to Cart</button>
         </form>
     </div>

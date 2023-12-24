@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect,get_list_or_404
 from django.views.decorators.http import require_POST
+from django.contrib import messages
 
 from vendors.models import Product
 
@@ -12,17 +13,23 @@ from cart.forms import CartAddProductForm
 def cart_add(request,product_id):
     cart = Cart(request)
     product = get_list_or_404(Product,id=product_id)
+    product = product[0]
     form = CartAddProductForm(request.POST)
+    form.product = product #set the product attribute 
+
     print("*******************")
     print(product)
-    print(type(product[0]))
+   
 
     if form.is_valid():
         cd = form.cleaned_data
-        cart.add(product=product[0],
+        print(product.items_in_store)
+        cart.add(product=product,
                  quantity=cd['quantity'],
                  override_quantity=cd['override'])
         return redirect('cart:cart_detail')
+    return render(request,'vendors/product_detail.html',{'product':product,'cart_form':form})
+        
     
 @require_POST 
 def cart_remove(request,product_id):
