@@ -1,35 +1,47 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    <h1>
-        Checkout 
-    </h1>
-    <div>
-        <h3>
-            Your order 
-        </h3>
-        <ul>
-            {% for item in cart %}
-            <li>
-                {{item.quantity}}x{{item.product.item_name}}
-                <span>
-                    ${{item.total_price}}
-                </span>
-            </li>
-
-            {% endfor %}
-        </ul>
-        <p>
-            Total: ${{ cart.get_total_price }}
-        </p>
-
+    <div class="container mt-4">
+        <h1>Checkout</h1>
+        <div>
+            <h3>Your Order</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Quantity</th>
+                            <th>Item</th>
+                            <th class="text-right">Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart %}
+                            <tr>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.product.item_name }}</td>
+                                <td class="text-right">${{ item.total_price }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2" class="font-weight-bold">Total:</td>
+                            <td class="text-right font-weight-bold">${{ cart.get_total_price }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            
+            <p class="mt-3">
+                Total: ${{ cart.get_total_price }}
+            </p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p>
+                <input type="submit" class="btn btn-primary" value="Place Order">
+            </p>
+        </form>
     </div>
-    <form method="post">
-        {{ form.as_p}}
-        <p>
-            <input type="submit" value="Place order">
-        </p>
-        {% csrf_token %}
-    </form>
 {% endblock %}

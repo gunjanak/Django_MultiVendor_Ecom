@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'rest_framework',
+    'wkhtmltopdf',
 
 
     
@@ -165,15 +166,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 CART_SESSION_ID = "cart"
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# print(env('EMAIL_HOST_USER'))
-# EMAIL_HOST = env('EMAIL_HOST')
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+WKHTMLTOPDF_CMD = '/usr/bin/wkhtmltopdf'
 
-
-
-# RECIPIENTS_ADDRESS = env('RECIPIENTS_ADDRESS')
-
+WKHTMLTOPDF_CMD_OPTIONS = {
+    'quiet': True,
+}

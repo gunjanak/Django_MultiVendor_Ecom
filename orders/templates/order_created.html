@@ -1,14 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>
-        Thank you
-    </h1>
+ 
+<h2>Order Details</h2>
+<p>Order Number: {{ order.id }}</p>
+<p>Order Date: {{ order.created }}</p>
 
-    <p>
-        Your order has been successfully completed.
-        Your order number is <strong>
-            {{order.id}}
-        </strong>
-    </p>
+<h2>User Information</h2>
+<p>Username: {{ order.first_name }}</p>
+<p>Email: {{ order.email }}</p>
+
+<h2>Order Items</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in order_items %}
+            <tr>
+                <td>{{ item.product.item_name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.price }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2" class="font-weight-bold">Total:</td>
+            <td class="text-right font-weight-bold">${{ order.get_total_cost }}</td>
+        </tr>
+    </tfoot>
+</table>
+
+<button>
+    <a href="{%url 'orders:order_pdf' order.id%}">
+        PDF
+    </a>
+</button>
+
 {% endblock %}
