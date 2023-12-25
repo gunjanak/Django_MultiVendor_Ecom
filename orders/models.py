@@ -1,8 +1,18 @@
+import random
+from datetime import datetime,timedelta
+
 from django.db import models
+from django.utils import timezone
 from vendors.models import Product
 
 
 # Create your models here.
+
+start_date = datetime.strptime('2020-01-01 12:30:30','%Y-%m-%d %H:%M:%S')
+end_date = datetime.strptime('2023-12-24 12:30:30','%Y-%m-%d %H:%M:%S')
+random_time = start_date + timedelta(seconds=random.randint(0, int((end_date - start_date).total_seconds())))
+print(random_time)
+
 class Order(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -10,8 +20,10 @@ class Order(models.Model):
     address = models.CharField(max_length=250)
     postal_code= models.CharField(max_length=20)
     city = models.CharField(max_length=20)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now = True)
+    # created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=timezone.make_aware(random_time))
+    updated = models.DateTimeField(default=timezone.make_aware(random_time))
+    # updated = models.DateTimeField(auto_now = True)
     paid = models.BooleanField(default=False)
 
     class Meta:
