@@ -1,4 +1,6 @@
 from typing import Any
+import pandas as pd
+
 from django import http
 from django.db.models.query import QuerySet
 from django.forms.models import BaseModelForm
@@ -16,6 +18,9 @@ from rest_framework.decorators import api_view
 
 from cart.forms import CartAddProductForm
 from orders.models import Order,OrderItem
+from vendors.dataProcess import data_process
+
+
 
 
 
@@ -137,6 +142,22 @@ class UserProductServiceListView(LoginRequiredMixin,ListView):
 
         #All the orderItem related to the vendor
         orderItem_queryset = OrderItem.objects.filter(product__vendor=user)
+        data = []
+        for idx,order_item in enumerate(orderItem_queryset,start=1):
+            data.append({
+                'sn':idx,
+                "Order id":order_item.order.id,
+                "Date":order_item.order.created,
+                "Product":order_item.product.item_name,
+                "Category":order_item.product.category.name,
+                "Items Sold":order_item.quantity,
+                "Price":order_item.price,
+            })
+        df = pd.DataFrame(data)
+        df['Date'] = df['Date'].dt.date
+        # print(df)
+        chart_data_json = data_process(df)
+        
         all_my_products = []
         for product in product_queryset:
             product_sell = {}
@@ -160,7 +181,8 @@ class UserProductServiceListView(LoginRequiredMixin,ListView):
         total_earning = sum(item['Earning'] for item in all_my_products)
 
         return {'products':product_queryset,'services':service_queryset,'orderitems':orderItem_queryset,
-                'allProducts':all_my_products,"totalEarning":total_earning}
+                'allProducts':all_my_products,"totalEarning":total_earning,
+                "chart_data":chart_data_json}
     
 
 

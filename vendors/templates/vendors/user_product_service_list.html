@@ -57,5 +57,21 @@
   
 
    
+    <div style="width: 30%;">
+        <canvas id="myPieChart"></canvas>
+    </div>
+    <p>
+        {{user_product_service_list.chart_data}}
+    </p>
+    <script>
+        //Parse the JSON data passed from the view
+        var chartData = {{ user_product_service_list.chart_data|safe }}
+        //Draw the pie chart using chart.js
 
+        var ctx = document.getElementById("myPieChart").getContext('2d');
+        var myPieChart = new Chart(ctx,{
+            type:'pie',
+            data:chartData,
+        });
+    </script>
 {% endblock %}

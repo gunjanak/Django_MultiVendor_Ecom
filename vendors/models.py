@@ -10,6 +10,11 @@ class ProductCategory(models.Model):
     def __str__(self):
         return self.name
     
+    def __lt__(self, other):
+        if isinstance(other, ProductCategory):
+            return self.name < other.name
+        return NotImplemented
+    
 class ServiceCategory(models.Model):
     name = models.CharField(max_length=255)
 
