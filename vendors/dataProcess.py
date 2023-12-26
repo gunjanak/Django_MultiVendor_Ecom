@@ -24,16 +24,29 @@ def data_process(df):
     grouped_df = df.groupby('Category').agg({
     'Items Sold': 'sum'}).reset_index()
 
-    # Generate background colors dynamically using a color map
-    cmap = plt.get_cmap('Accent')  # You can choose a different colormap
-    colors = [matplotlib.colors.rgb2hex(cmap(i)[:3]) for i in range(len(grouped_df['Category']))]
+    # # Generate background colors dynamically using a color map
+    # cmap = plt.get_cmap('BrBG')  # You can choose a different colormap
+    # colors = [matplotlib.colors.rgb2hex(cmap(i)[:3]) for i in range(len(grouped_df['Category']))]
+
+    # Choose a colormap (you can explore other colormaps from matplotlib)
+    cmap = plt.get_cmap('PuRd')
+
+    # Normalize the aggregated values to get values between 0 and 1
+    norm = plt.Normalize(grouped_df['Items Sold'].min(), grouped_df['Items Sold'].max())
+
+    # Create a color map using the colormap and normalized values
+    colors = plt.cm.ScalarMappable(cmap=cmap, norm=norm).to_rgba(grouped_df['Items Sold'])
+
+    # Convert RGB values to hexadecimal
+    hex_colors = [matplotlib.colors.rgb2hex(color[:3]) for color in colors]
+
     
     # Convert DataFrame to JSON
     chart_data = {
         'labels': grouped_df['Category'].tolist(),
         'datasets': [{
             'data': grouped_df['Items Sold'].tolist(),
-            'backgroundColor': colors,
+            'backgroundColor': hex_colors,
         }],
     }
 
@@ -127,17 +140,33 @@ def generate_data_month_price(df):
 def generate_data_category_price(df):
     grouped_df = df.groupby('Category').agg({
     'Price': 'sum'}).reset_index()
+    print("******************")
+    print(type(grouped_df['Price'][0]))
+    # Convert 'DecimalColumn' to floating-point numbers
+    grouped_df['Price'] = grouped_df['Price'].astype(float)
 
-    # Generate background colors dynamically using a color map
-    cmap = plt.get_cmap('Accent')  # You can choose a different colormap
-    colors = [matplotlib.colors.rgb2hex(cmap(i)[:3]) for i in range(len(grouped_df['Category']))]
+    # # Generate background colors dynamically using a color map
+    # cmap = plt.get_cmap('Accent')  # You can choose a different colormap
+    # colors = [matplotlib.colors.rgb2hex(cmap(i)[:3]) for i in range(len(grouped_df['Category']))]
+
+    # Choose a colormap (you can explore other colormaps from matplotlib)
+    cmap = plt.get_cmap('PuRd')
+
+    # Normalize the aggregated values to get values between 0 and 1
+    norm = plt.Normalize(grouped_df['Price'].min(), grouped_df['Price'].max())
+
+    # Create a color map using the colormap and normalized values
+    colors = plt.cm.ScalarMappable(cmap=cmap, norm=norm).to_rgba(grouped_df['Price'])
+
+    # Convert RGB values to hexadecimal
+    hex_colors = [matplotlib.colors.rgb2hex(color[:3]) for color in colors]
     
     # Convert DataFrame to JSON
     chart_data = {
         'labels': grouped_df['Category'].tolist(),
         'datasets': [{
             'data': grouped_df['Price'].tolist(),
-            'backgroundColor': colors,
+            'backgroundColor': hex_colors,
         }],
     }
 
