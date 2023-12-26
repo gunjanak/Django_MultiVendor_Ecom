@@ -156,8 +156,8 @@ class UserProductServiceListView(LoginRequiredMixin,ListView):
         df = pd.DataFrame(data)
         df['Date'] = df['Date'].dt.date
         # print(df)
-        chart_data_json,line_chart_data_json,line_chart_data_price_json, pie_chart_data_price_json,product_list,chart_data_product = data_process(df)
-        
+        chart_data_json,line_chart_data_json,line_chart_data_price_json, pie_chart_data_price_json,product_list,chart_data_product,forecasts = data_process(df)
+        print(forecasts)
         all_my_products = []
         for product in product_queryset:
             product_sell = {}
@@ -187,7 +187,8 @@ class UserProductServiceListView(LoginRequiredMixin,ListView):
                 "line_chart_price_data":line_chart_data_price_json,
                 "pie_chart_price_data":pie_chart_data_price_json,
                 "product_list":product_list,
-                "chart_data_product":chart_data_product}
+                "chart_data_product":chart_data_product,
+                "forecasts":forecasts}
     
 
 

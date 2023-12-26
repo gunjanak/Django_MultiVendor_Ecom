@@ -66,9 +66,8 @@
                     <div class="card-body">
                         <select id="pieDropdown" onchange="handlePieChange()">
                             <option value="option1">Items Sold</option>
-                            <option value="option2">Dollor Earned</option>
+                            <option value="option2">Dollars Earned</option>
                         </select>
-
                         <canvas id="myPieChart" width="100%" height="auto"></canvas>
                     </div>
                 </div>
@@ -88,24 +87,47 @@
             </div>
         </div>
     </div>
+    
+    <!-- Line of 10 pixels -->
+    <hr class="my-4">
+    
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Dropdown and Chart (4/5 part) -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <label for="productDropdown">Select Product:</label>
+                        <select class="form-control" id="productDropdown" name="selected_option" onchange="updateProductChart()">
+                            {% for option in user_product_service_list.product_list %}
+                                <option value="{{ option }}">{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                   
+                        <canvas id="productLineChart" width="100%" height="30%"></canvas>
+                    </div>
 
-    <select id="productDropdown" name="selected_option" onchange="updateProductChart()">
-        {% for option in user_product_service_list.product_list %}
-            <option value="{{ option }}">{{ option }}</option>
-        {% endfor %}
-    </select>
+                </div>
+                
+            </div>
     
-
-    <canvas id="productLineChart" width="100%" height="15%"></canvas>
-    
-   
-    
+            <!-- Paragraph (1/5 part) -->
+            <div class="col-md-4 text-center">
+                <h3 id="forecast" class="mt-4 text-danger font-weight-bold">
+                    <!-- Content of the paragraph goes here -->
+                </h3>
+            </div>
+        </div>
+    </div>
     
     <script>
         //Parse the JSON data passed from the view
         var pieChartData = {{ user_product_service_list.chart_data|safe }}
         var lineChartData = {{ user_product_service_list.line_chart_data|safe }}
         var chartProduct;
+        var forecastProduct = document.getElementById("forecast");
+        var forcastData = {{user_product_service_list.forecasts|safe}};
+        console.log(forcastData);
         
         //Draw the pie chart using chart.js
 
@@ -174,11 +196,13 @@
         console.log("Updating Product chart")
         selectedProduct = document.getElementById('productDropdown').value;
         drawLineChart(selectedProduct);
+        forecastProduct.innerText = "Next Month Forecast of \n"+ selectedProduct + " is \n"+forcastData[selectedProduct];
     }
 
     function drawLineChart(product) {
        
-        console.log(product)
+        console.log(forcastData[product]);
+        forecastProduct.innerText ="Next Month Forecast of \n"+ product + " is \n"+forcastData[product];
         if (chartProduct) {
             chartProduct.destroy();  // Destroy the existing chart instance
         }
@@ -186,7 +210,7 @@
         var data = chartData[product];
 
         chartProduct = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: data.map(entry => entry.Month + '/' + entry.Year),
                 datasets: [{
