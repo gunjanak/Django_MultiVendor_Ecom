@@ -64,6 +64,11 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
+                        <select id="pieDropdown" onchange="handlePieChange()">
+                            <option value="option1">Option 1</option>
+                            <option value="option2">Option 2</option>
+                        </select>
+
                         <canvas id="myPieChart" width="100%" height="auto"></canvas>
                     </div>
                 </div>
@@ -73,6 +78,10 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
+                        <select id="lineDropdown" onchange="handleLineChange()">
+                            <option value="option1">No. Items Sold</option>
+                            <option value="option2">Sales in Dollars</option>
+                        </select>
                         <canvas id="lineChart" width="100%" height="45%"></canvas>
                     </div>
                 </div>
@@ -80,11 +89,14 @@
         </div>
     </div>
     
+   
+    
     
     <script>
         //Parse the JSON data passed from the view
         var chartData = {{ user_product_service_list.chart_data|safe }}
         var lineChartData = {{ user_product_service_list.line_chart_data|safe }}
+        
         //Draw the pie chart using chart.js
 
         var ctx = document.getElementById("myPieChart").getContext('2d');
@@ -95,11 +107,40 @@
 
         var lineCtx = document.getElementById("lineChart").getContext('2d');
         var lineChart = new Chart(lineCtx,{
-            type:'bar',
+            type:'line',
             title:'Sales per Month',
             data:lineChartData,
 
         });
+        
+      
+
+        function handleLineChange() {
+        // Get the selected value from the dropdown
+        var selectedValue = document.getElementById("lineDropdown").value;
+
+        var newData = fetchOnSelection(selectedValue);
+
+        lineChart.data = newData;
+        lineChart.update();
+
+        // Perform actions based on the selected value
+        console.log("Selected value: " + selectedValue);
+        
+    }
+
+    function fetchOnSelection(selectedValue){
+        var newData;
+        if(selectedValue === 'option2'){
+            newData = {{user_product_service_list.line_chart_price_data|safe}}
+        } else {
+            newData = lineChartData;
+        }
+
+        return newData;
+    }
+
+    
 
     </script>
 {% endblock %}

@@ -1,5 +1,5 @@
 import pandas as pd
-import json
+import simplejson as json
 import random
 import calendar
 import matplotlib.pyplot as plt 
@@ -70,7 +70,40 @@ def data_process(df):
     line_chart_data_json = json.dumps(line_chart_data)
 
     # print(df3)
+    line_chart_data_price_json = generate_data_month_price(df)
    
 
    
-    return chart_data_json,line_chart_data_json
+    return chart_data_json,line_chart_data_json,line_chart_data_price_json
+
+def generate_data_month_price(df):
+    df['Date'] = pd.to_datetime(df['Date'])
+    #Create a new column for month
+    df['Month'] = df['Date'].dt.month
+
+    #Group by month and sum the 'Items Sold' column
+    monthly_items_sold = df.groupby('Month')['Price'].sum()
+
+    df3 = pd.DataFrame(monthly_items_sold)
+    df3.reset_index(inplace = True)
+    df3['Month'] = df3['Month'].apply(lambda x: calendar.month_abbr[x])
+
+    # Convert DataFrame to JSON
+    line_chart_data = {
+        'labels': df3['Month'].tolist(),
+        'datasets': [{
+            "label":"Total Sales in $",
+            'data': df3['Price'].tolist(),
+            'borderColor':'rgba(54, 162, 235, 0.5)',
+            "backgroundColor":'rgba(54, 162, 235, 0.5)',
+            'fill': False,
+            'tension': 0.1
+        }],
+    }
+    
+    # Convert to JSON string
+    line_chart_data_price_json = json.dumps(line_chart_data)
+    print(line_chart_data_price_json)
+
+
+    return line_chart_data_price_json

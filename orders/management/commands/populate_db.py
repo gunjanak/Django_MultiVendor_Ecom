@@ -21,7 +21,7 @@ class Command(BaseCommand):
         
 
 
-        for i in range(5000):
+        for i in range(100):
             start_date = datetime.strptime('2023-01-01 12:30:30','%Y-%m-%d %H:%M:%S')
             end_date = datetime.strptime('2023-12-24 12:30:30','%Y-%m-%d %H:%M:%S')
             random_time = start_date + timedelta(seconds=random.randint(0, int((end_date - start_date).total_seconds())))
@@ -38,11 +38,11 @@ class Command(BaseCommand):
                 paid= False)
             
             try:
-                product1 = Product.objects.get(pk = random.randint(1,25))
+                product1 = Product.objects.get(pk = random.randint(26,32))
                 OrderItem.objects.create(order=order,product=product1,price=product1.price,quantity=random.randint(1,15))
-                product2 = Product.objects.get(pk = random.randint(1,25))
+                product2 = Product.objects.get(pk = random.randint(24,32))
                 OrderItem.objects.create(order=order,product=product2,price=product2.price,quantity=random.randint(1,15))
-                product3 = Product.objects.get(pk = random.randint(1,25))
+                product3 = Product.objects.get(pk = random.randint(23,32))
                 OrderItem.objects.create(order=order,product=product3,price=product3.price,quantity=random.randint(1,15))
             
                 order.save()
