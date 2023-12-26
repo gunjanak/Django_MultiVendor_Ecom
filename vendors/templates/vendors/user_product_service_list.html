@@ -65,8 +65,8 @@
                 <div class="card">
                     <div class="card-body">
                         <select id="pieDropdown" onchange="handlePieChange()">
-                            <option value="option1">Option 1</option>
-                            <option value="option2">Option 2</option>
+                            <option value="option1">Items Sold</option>
+                            <option value="option2">Dollor Earned</option>
                         </select>
 
                         <canvas id="myPieChart" width="100%" height="auto"></canvas>
@@ -88,21 +88,31 @@
             </div>
         </div>
     </div>
+
+    <select id="productDropdown" name="selected_option" onchange="updateProductChart()">
+        {% for option in user_product_service_list.product_list %}
+            <option value="{{ option }}">{{ option }}</option>
+        {% endfor %}
+    </select>
+    
+
+    <canvas id="productLineChart" width="100%" height="15%"></canvas>
     
    
     
     
     <script>
         //Parse the JSON data passed from the view
-        var chartData = {{ user_product_service_list.chart_data|safe }}
+        var pieChartData = {{ user_product_service_list.chart_data|safe }}
         var lineChartData = {{ user_product_service_list.line_chart_data|safe }}
+        var chartProduct;
         
         //Draw the pie chart using chart.js
 
         var ctx = document.getElementById("myPieChart").getContext('2d');
-        var myPieChart = new Chart(ctx,{
+        var pieChart = new Chart(ctx,{
             type:'pie',
-            data:chartData,
+            data:pieChartData,
         });
 
         var lineCtx = document.getElementById("lineChart").getContext('2d');
@@ -139,6 +149,67 @@
 
         return newData;
     }
+
+    function handlePieChange(){
+        // Get the selected value from the dropdown
+        var selectedValue = document.getElementById("pieDropdown").value;
+        var newData;
+        if(selectedValue === 'option2'){
+            newData = {{user_product_service_list.pie_chart_price_data|safe}}
+        } else {
+            newData = pieChartData;
+        }
+        
+
+        pieChart.data = newData;
+        pieChart.update();
+
+    }
+
+
+    var chartData = {{ user_product_service_list.chart_data_product|safe }};
+    var selectedProduct = document.getElementById('productDropdown').value;
+
+    function updateProductChart() {
+        console.log("Updating Product chart")
+        selectedProduct = document.getElementById('productDropdown').value;
+        drawLineChart(selectedProduct);
+    }
+
+    function drawLineChart(product) {
+       
+        console.log(product)
+        if (chartProduct) {
+            chartProduct.destroy();  // Destroy the existing chart instance
+        }
+        var ctx = document.getElementById('productLineChart').getContext('2d');
+        var data = chartData[product];
+
+        chartProduct = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.map(entry => entry.Month + '/' + entry.Year),
+                datasets: [{
+                    label: product,
+                    data: data.map(entry => entry['Items Sold']),
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Initial chart drawing
+    drawLineChart(selectedProduct);
+   
 
     
 
