@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 import random
+import calendar
 import matplotlib.pyplot as plt 
 import matplotlib
 
@@ -13,16 +14,10 @@ def data_process(df):
     grouped_df = df.groupby('Category').agg({
     'Items Sold': 'sum'}).reset_index()
 
-    # Print the grouped DataFrame
-    print(grouped_df)
-    
     # Generate background colors dynamically using a color map
     cmap = plt.get_cmap('Accent')  # You can choose a different colormap
     colors = [matplotlib.colors.rgb2hex(cmap(i)[:3]) for i in range(len(grouped_df['Category']))]
-    print(colors)
-
     
-
     # Convert DataFrame to JSON
     chart_data = {
         'labels': grouped_df['Category'].tolist(),
@@ -32,13 +27,50 @@ def data_process(df):
         }],
     }
 
-    
-    print(chart_data)
-    # # Convert ProductCategory instances to JSON-serializable format
-    # categories = Product.objects.values('item_name')
-    # chart_data['labels'] = [category['item_name'] for category in categories]
-    #     # Convert to JSON string
     chart_data_json = json.dumps(chart_data)
 
-    print(chart_data_json)
-    return chart_data_json
+
+    #Items sold per month
+    
+
+    df2 = df
+    df2['Date'] = pd.to_datetime(df2['Date'])
+    #Create a new column for month
+    df2['Month'] = df2['Date'].dt.month
+    
+    
+   
+
+
+    #Group by month and sum the 'Items Sold' column
+    monthly_items_sold = df2.groupby('Month')['Items Sold'].sum()
+
+    
+    print(monthly_items_sold)
+    print(type(monthly_items_sold))
+    df3 = pd.DataFrame(monthly_items_sold)
+    df3.reset_index(inplace = True)
+    df3['Month'] = df3['Month'].apply(lambda x: calendar.month_abbr[x])
+
+
+    # Convert DataFrame to JSON
+    line_chart_data = {
+        'labels': df3['Month'].tolist(),
+        'datasets': [{
+            "label":"Total Sales",
+            'data': df3['Items Sold'].tolist(),
+            'borderColor':'rgba(54, 162, 235, 0.5)',
+            "backgroundColor":'rgba(54, 162, 235, 0.5)',
+            'fill': False,
+            'tension': 0.1
+        }],
+    }
+
+    # Convert to JSON string
+    line_chart_data_json = json.dumps(line_chart_data)
+
+    # print(df3)
+   
+
+   
+    return chart_data_json,line_chart_data_json

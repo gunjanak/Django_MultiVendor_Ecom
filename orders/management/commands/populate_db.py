@@ -21,11 +21,11 @@ class Command(BaseCommand):
         
 
 
-        for i in range(50):
+        for i in range(5000):
             start_date = datetime.strptime('2023-01-01 12:30:30','%Y-%m-%d %H:%M:%S')
             end_date = datetime.strptime('2023-12-24 12:30:30','%Y-%m-%d %H:%M:%S')
             random_time = start_date + timedelta(seconds=random.randint(0, int((end_date - start_date).total_seconds())))
-            print(random_time)
+            # print(random_time)
             order = Order.objects.create(
                 first_name = random.choice(first_name),
                 last_name = random.choice(last_name),
@@ -37,13 +37,18 @@ class Command(BaseCommand):
                 updated = timezone.make_aware(random_time),
                 paid= False)
             
-            product1 = Product.objects.get(pk = random.randint(24,25))
-            OrderItem.objects.create(order=order,product=product1,price=product1.price,quantity=random.randint(1,15))
-            # product2 = Product.objects.get(pk = random.randint(24,25))
-            # OrderItem.objects.create(order=order,product=product2,price=product2.price,quantity=random.randint(1,15))
-            # product3 = Product.objects.get(pk = random.randint(24,25))
-            # OrderItem.objects.create(order=order,product=product3,price=product3.price,quantity=random.randint(1,15))
-            order.save()
-            print(order)
+            try:
+                product1 = Product.objects.get(pk = random.randint(1,25))
+                OrderItem.objects.create(order=order,product=product1,price=product1.price,quantity=random.randint(1,15))
+                product2 = Product.objects.get(pk = random.randint(1,25))
+                OrderItem.objects.create(order=order,product=product2,price=product2.price,quantity=random.randint(1,15))
+                product3 = Product.objects.get(pk = random.randint(1,25))
+                OrderItem.objects.create(order=order,product=product3,price=product3.price,quantity=random.randint(1,15))
+            
+                order.save()
+                print(order)
+            except:
+                pass
+            
         self.stdout.write(self.style.SUCCESS("Successfully populated the database."))
 

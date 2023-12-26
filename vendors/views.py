@@ -156,12 +156,12 @@ class UserProductServiceListView(LoginRequiredMixin,ListView):
         df = pd.DataFrame(data)
         df['Date'] = df['Date'].dt.date
         # print(df)
-        chart_data_json = data_process(df)
+        chart_data_json,line_chart_data_json = data_process(df)
         
         all_my_products = []
         for product in product_queryset:
             product_sell = {}
-            print(product.item_name)
+           
             product_sold = 0
             pending_orders = 0
             for order in orderItem_queryset:
@@ -177,12 +177,13 @@ class UserProductServiceListView(LoginRequiredMixin,ListView):
             product_sell['In Store'] = product.items_in_store
             # print(product_sell)
             all_my_products.append(product_sell)
-        print(all_my_products)
+       
         total_earning = sum(item['Earning'] for item in all_my_products)
 
         return {'products':product_queryset,'services':service_queryset,'orderitems':orderItem_queryset,
                 'allProducts':all_my_products,"totalEarning":total_earning,
-                "chart_data":chart_data_json}
+                "chart_data":chart_data_json,
+                "line_chart_data":line_chart_data_json}
     
 
 
