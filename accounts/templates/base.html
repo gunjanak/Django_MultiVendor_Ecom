@@ -15,98 +15,101 @@
 
         <style>
             body {
-                min-height: 150vh;
-                display: flex;
-                flex-direction: column;
+              min-height: 100vh;
+              display: flex;
+              flex-direction: column;
             }
-    
+        
             .content {
-                flex: 1;
+              flex: 1;
             }
-        </style>
+        
+            /* Add more custom styles if needed */
+            .footer {
+                background-color: #3e2723; /* Dark brown color */
+                color: #fff; /* White text color */
+                padding: 20px 0;
+                text-align: center;
+                }
+          </style>
 
 
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-info">
-            <a class="navbar-brand" href="#">ME</a>
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color:#3e2723; color: #fff;">
+            <a class="navbar-brand"style="color: #fff;" href="#">ME</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="{% url 'home' %}">Home </a>
-
+                        <a class="nav-link" style="color: #fff;" href="{% url 'home' %}">Home</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="#">About</a>
+                        <a class="nav-link" style="color: #fff;" href="#">About</a>
                     </li>
                 </ul>
-
+        
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
-
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout'%}">
+                        <a class="nav-link" style="color: #fff;" href="{% url 'logout'%}">
                             Logout
                         </a>
                     </li>
-
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">
+                        <a class="nav-link" style="color: #fff;" href="{% url 'login' %}">
                             Login
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'signup'%}">
+                        <a class="nav-link" style="color: #fff;" href="{% url 'signup'%}">
                             Signup
                         </a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <p>
-                            
-                            {% with total_items=cart|length %}
-                                {% if total_items > 0%}
-                                    Your Cart:
-                                    <a href="{% url 'cart:cart_detail' %}">
-                                        {{ total_items }} item {{total_items|pluralize}}
-                                        ${{ cart.get_total_price}}
-                                    </a>
-                                {% elif not order %}
-                                    Your Cart is Empty
-
-                                {% endif %}
-
-                            {% endwith %}
-
-                        </p>
                         
-
+                            {% with total_items=cart|length %}
+                            {% if total_items > 0%}
+                            
+                            <a class="nav-link" style="color: #fff;" href="{% url 'cart:cart_detail' %}">
+                                Your Cart:
+                                {{ total_items }} item {{total_items|pluralize}}
+                                ${{ cart.get_total_price}}
+                            </a>
+                            {% elif not order %}
+                            <a class="nav-link" style="color: #fff;"href="#">
+                                Your Cart is Empty
+                        
+                            </a>
+                            
+                            {% endif %}
+                            {% endwith %}
+                        
                     </li>
-
                 </ul>
             </div>
         </nav>
 
         {% if user.is_authenticated %}
-        <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
-            <a class="navbar-brand" href="#"> Hi {{ user.username }}</a>
+        <nav class="navbar navbar-expand-lg navbar-light bg-secondary" style="background-color:#7b5e57;">
+            <a class="navbar-brand" style="color: #fff;" href="#"> Hi {{ user.username }}</a>
             <div class="collapse navbar-collapse" id="navbarNav2">
                 <ul class="navbar-nav me-auto">
                         
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'user_product_service_list'%}">
+                            <a class="nav-link" style="color: #fff;" href="{% url 'user_product_service_list'%}">
                                 Your Products and Services
 
                             </a>
                         </li>   
                         <li class="nav-item">
                            
-                            <a class="nav-link" href="{% url 'profiles:profile_detail' user.profile.pk %}">
+                            <a class="nav-link" style="color: #fff;" href="{% url 'profiles:profile_detail' user.profile.pk %}">
                                 Your Profile
                             </a>
 
@@ -115,10 +118,10 @@
 
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'create_product' %}">Create a Product</a>  
+                        <a class="nav-link" style="color: #fff;" href="{% url 'create_product' %}">Create a Product</a>  
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'create_service' %}">Create a Service</a>
+                        <a class="nav-link" style="color: #fff;" href="{% url 'create_service' %}">Create a Service</a>
 
                     </li>
 
@@ -132,13 +135,14 @@
 
             {% endblock %}
         </div>
-        <footer class="footer mt-4 py-3 bg-dark text-light">
-            <div class="container">
-                <p class="text-center mb-0">Your Footer Content &copy; {% now "Y" %}</p>
-            </div>
-        </footer>
 
-        <!-- Include Bootstrap JS and Popper.js (required for Bootstrap JS) -->
+
+
+        <footer class="footer">
+            <div class="container">
+              <p>&copy; 2023 Your Company</p>
+            </div>
+          </footer>
 
     </body>
 
